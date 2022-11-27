@@ -12,6 +12,7 @@ from scipy import stats
 ### possible improvements
 # Early stopping of training is only implemented for density estimator, not for Autoencoder. Add early stopping criterion for AE.
 # Print out plot of training loss and validation loss for each model
+# add decaying learning rate to Autoencoder training
 
 class Spectra_PAE():
     """
