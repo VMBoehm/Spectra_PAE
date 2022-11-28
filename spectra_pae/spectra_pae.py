@@ -12,7 +12,7 @@ from scipy import stats
 ### possible improvements
 # Early stopping of training is only implemented for density estimator, not for Autoencoder. Add early stopping criterion for AE.
 # Print out plot of training loss and validation loss for each model
-# add decaying learning rate to Autoencoder training
+
 
 class Spectra_PAE():
     """
@@ -66,13 +66,14 @@ class Spectra_PAE():
         torch.manual_seed(self.seed)
         np.random.seed(self.seed)        
         
-    def train_complete_model(self, nepochs=100, retrain=False, use_prior=False):
+    def train_complete_model(self, nepochs=100, retrain=False, use_prior=False, niter=500):
         """
         trains and saves complete model
         --------
         nepochs: number of epochs to train for (you could add an early stopping criteria on validation loss)
         retrain: whether to retrain even if model if files exist (better to change the name under which the models are saved by chanin the prefixes)
         use_prior: whether to use a prior when evaluating the class probability
+        niter: number of training steps in the normalizing flow
         """
         
         self.set_seeds()
@@ -105,7 +106,7 @@ class Spectra_PAE():
             print('loading trained NF1...')
             self.NF1 = torch.load(os.path.join(self.model_dir,self.prefixes['NF1']))   
         else:
-            self.train_conditional_density_stage1()
+            self.train_conditional_density_stage1(max_iter=niter)
             
         if use_prior:
             prior=self.get_prior(self.labels['train'])
@@ -119,11 +120,11 @@ class Spectra_PAE():
             self.new_labels[split] = self.NF1_classify(torch.squeeze(self.NF1_data[split]),prior=prior)
             
         # train second conditional normalzing flow with new labels
-        if os.path.isfile(os.path.join(self.model_dir,self.prefixes['NF2'])):
+        if os.path.isfile(os.path.join(self.model_dir,self.prefixes['NF2'])) and (retrain==False):
             print('loading trained NF2...')
             self.NF2 = torch.load(os.path.join(self.model_dir,self.prefixes['NF2']))   
         else:
-            self.train_conditional_density_stage2()
+            self.train_conditional_density_stage2(max_iter=niter)
         
     def setup_AE1(self):
         """
