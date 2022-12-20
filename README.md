@@ -1,7 +1,9 @@
-# Spectra_PAE
+# Spectra PAE
 Probabilsitic autoencoder implementation for galaxy spectra
 
-### Getting started
+## Getting started
+
+### Requirements
 
 - install reqirements
 
@@ -26,8 +28,12 @@ pip install -r requirements.txt
 pip install -e . 
 ```
 
-- run example [notebook](https://github.com/VMBoehm/Spectra_PAE/blob/main/example_notebook.ipynb)
+### Download the preprocessed data
 
+
+### Test it 
+
+- run example [notebook](https://github.com/VMBoehm/Spectra_PAE/blob/main/example_notebook.ipynb)
 
 
 
